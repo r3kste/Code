@@ -1,0 +1,9 @@
+.directory
+t.cpp
+t.py
+*.txt
+*.out
+*.dot
+*.png
+*.pdf
+submissions/
