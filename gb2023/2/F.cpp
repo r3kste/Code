@@ -6,31 +6,41 @@ using namespace std;
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);
 
+#define endl "\n"
+#define yesno(a) cout << ((a) ? "Yes" : "No");
+
 #define F first
 #define S second
 #define mp make_pair
 #define pb push_back
 #define all(a) (a).begin(), (a).end()
-#define sz(a) ((int) (a).size())
+#define rall(a) (a).rbegin(), (a).rend()
 
 typedef long long int ll;
+typedef unsigned long long int LL;
 typedef pair<int, int> ii;
 
 typedef vector<int> vi;
-typedef vector<char> vc;
-typedef vector<bool> vb;
-typedef vector<ll> vll;
+typedef vector<pair<int, int>> vii;
+typedef vector<long long int> vll;
 
 int solve()
 {
     fastio;
-    int n;
-    cin >> n;
-    vi a (n);
+    int n, k;
+    cin >> n >> k;
+    ll log2k = (ll)floor (log2 (k))  + 1;
+    ll limitk = pow (2, log2k);
+    ll log2n = (ll)ceil (log2 (n));
 
-    for (int i = 0; i < n; i++)
+    if (n <= limitk)
     {
-        cin >> a[i];
+        cout << log2n;
+    }
+    else
+    {
+        n -= limitk;
+        cout << log2k + (n + k - 1) / k;
     }
 
     return 0;
