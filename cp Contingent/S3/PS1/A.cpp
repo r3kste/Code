@@ -50,7 +50,11 @@ int solve()
         }
     }
 
-    cout << m - c << " " << c / (m - c);
+    if (m - c != 0)
+    {
+        cout << m - c << " " << c / (m - c);
+    }
+
     return 0;
 }
 

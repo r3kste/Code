@@ -23,110 +23,76 @@ typedef pair<int, int> ii;
 typedef vector<int> vi;
 typedef vector<pair<int, int>> vii;
 typedef vector<long long int> vll;
+
+int n, m;
 vector<vector<int>> adj;
 vector<bool> visited;
-void dfs (int node, int parent)
+vii dp;
+vector<bool> dpd;
+vi catto;
+int c;
+void dfs (int node, int parent, int streak)
 {
     visited[node] = true;
+    int newstreak = streak;
 
-    for (auto surr : adj[node])
+    if (catto[node])
     {
-        if (surr == parent)
-        {
-            continue;
-        }
+        newstreak += 1;
+    }
+    else
+    {
+        newstreak = 0;
+    }
 
-        if (visited[surr])
+    if (newstreak <= m)
+    {
+        if (adj[node].size() == 1)
         {
-            continue;
+            c++;
         }
+        else
+        {
+            for (auto surr : adj[node])
+            {
+                if (surr == parent || visited[surr])
+                {
+                    continue;
+                }
 
-        dfs (surr, node);
+                dfs (surr, node, newstreak);
+            }
+        }
     }
 }
 int solve()
 {
     fastio;
-    int n;
     cin >> n;
-    n *= 2;
-    string s;
-    cin >> s;
-    vi spos;
-    adj = vector<vector<int>> (n);
+    cin >> m;
+    adj = vector<vi> (n);
+    visited = vector<bool> (n, false);
+    dp = vii (n);
+    dpd = vector<bool> (n);
+    catto = vi (n, 0);
+    c = 0;
 
     for (int i = 0; i < n; i++)
     {
-        char c = s[i];
-
-        if (c == '(')
-        {
-            spos.pb (i);
-        }
+        cin >> catto[i];
     }
 
-    for (auto i : spos) // goto a '('
+    for (int i = 0; i < n - 1; i++)
     {
-        int oc = 1;
-        int cc = 0;
-
-        for (int j = i + 1; j < n; j++) // start from '(' and find balanced bracket sequences
-        {
-            char c = s[j];
-
-            if (c == '(')
-            {
-                oc++;
-            }
-            else
-            {
-                cc++;
-            }
-
-            if (cc == oc)
-            {
-                adj[i].pb (j);
-                adj[j].pb (i);
-            }
-
-            if (cc > oc)
-            {
-                break;
-            }
-        }
+        int u, v;
+        cin >> u >> v;
+        u--;
+        v--;
+        adj[u].pb (v);
+        adj[v].pb (u);
     }
 
-    int c = 0;
-    visited = vector<bool> (n, false);
-    // queue<int> todo;
-
-    for (int root = 0; root < n; root++)
-    {
-        if (visited[root])
-        {
-            continue;
-        }
-
-        c++;
-        dfs (root, -1);
-        // todo.push (root);
-        // visited[root] = true;
-        // while (todo.size() > 0)
-        // {
-        //     int node = todo.front();
-        //     todo.pop();
-        //     for (auto surr : adj[node])
-        //     {
-        //         if (visited[surr])
-        //         {
-        //             continue;
-        //         }
-        //         todo.push (surr);
-        //         visited[surr] = true;
-        //     }
-        // }
-    }
-
+    dfs (0, -1, 0);
     cout << c;
     return 0;
 }
@@ -135,7 +101,7 @@ int main()
 {
     fastio;
     int t = 1;
-    cin >> t;
+    // cin >> t;
 
     while (t--)
     {

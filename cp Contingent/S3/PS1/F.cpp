@@ -25,43 +25,46 @@ typedef vector<pair<int, int>> vii;
 typedef vector<long long int> vll;
 
 int n;
-vector<vector<int>> adj;
+vector<vii> adj;
 vector<bool> visited;
-vi dp;
-vector<bool> dpd;
-void dfs (int node, int parent)
+
+ll f (int node)
 {
     visited[node] = true;
+    ll maxx = 0;
 
     for (auto surr : adj[node])
     {
-        if (surr == parent || visited[surr])
+        if (visited[surr.F])
         {
             continue;
         }
 
-        dfs (surr, node);
+        maxx = max (maxx, surr.S + f (surr.F));
     }
+
+    return maxx;
 }
+
 int solve()
 {
     fastio;
     cin >> n;
-    adj = vector<vi> (n);
-    visited = vector<bool> (n, false);
-    dp = vi (n);
-    dpd = vector<bool> (n);
+    adj = vector<vii> (n);
+    visited.assign (n, false);
 
     for (int i = 0; i < n - 1; i++)
     {
-        int u, v;
-        cin >> u >> v;
-        u--;
-        v--;
-        adj[u].pb (v);
-        adj[v].pb (u);
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj[u].pb (mp (v, w));
+        adj[v].pb (mp (u, w));
     }
 
+    // f(i) = maximum cost starting from node 'i'
+    // ans = f(0)
+    // f(i) = maximum among surrounding except visited value of w+f(surr)
+    cout << f (0);
     return 0;
 }
 
@@ -69,7 +72,7 @@ int main()
 {
     fastio;
     int t = 1;
-    cin >> t;
+    // cin >> t;
 
     while (t--)
     {

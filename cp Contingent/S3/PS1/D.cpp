@@ -27,20 +27,20 @@ typedef vector<long long int> vll;
 int n;
 vector<vector<int>> adj;
 vector<bool> visited;
-vi dp;
-vector<bool> dpd;
-void dfs (int node, int parent)
+int maxdepth;
+void dfs (int node, int depth)
 {
+    maxdepth = max (maxdepth, depth);
     visited[node] = true;
 
     for (auto surr : adj[node])
     {
-        if (surr == parent || visited[surr])
+        if (visited[surr] || surr == -2)
         {
             continue;
         }
 
-        dfs (surr, node);
+        dfs (surr, depth + 1);
     }
 }
 int solve()
@@ -49,19 +49,32 @@ int solve()
     cin >> n;
     adj = vector<vi> (n);
     visited = vector<bool> (n, false);
-    dp = vi (n);
-    dpd = vector<bool> (n);
+    vi roots;
+    maxdepth = (int) - MOD;
 
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < n; i++)
     {
-        int u, v;
-        cin >> u >> v;
-        u--;
-        v--;
-        adj[u].pb (v);
-        adj[v].pb (u);
+        int t;
+        cin >> t;
+        t--;
+        adj[i].pb (t);
+
+        if (t == -2)
+        {
+            roots.pb (i);
+        }
+        else
+        {
+            adj[t].pb (i);
+        }
     }
 
+    for (auto root : roots)
+    {
+        dfs (root, 1);
+    }
+
+    cout << maxdepth;
     return 0;
 }
 
@@ -69,7 +82,7 @@ int main()
 {
     fastio;
     int t = 1;
-    cin >> t;
+    // cin >> t;
 
     while (t--)
     {

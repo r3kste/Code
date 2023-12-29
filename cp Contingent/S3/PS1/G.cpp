@@ -23,48 +23,111 @@ typedef pair<int, int> ii;
 typedef vector<int> vi;
 typedef vector<pair<int, int>> vii;
 typedef vector<long long int> vll;
-
-int n;
-vector<vii> adj;
+vector<vector<int>> adj;
 vector<bool> visited;
-
-ll f (int node)
+void dfs (int node, int parent)
 {
     visited[node] = true;
-    ll maxx = 0;
 
     for (auto surr : adj[node])
     {
-        if (visited[surr.F])
+        if (surr == parent)
         {
             continue;
         }
 
-        maxx = max (maxx, surr.S + f (surr.F));
+        if (visited[surr])
+        {
+            continue;
+        }
+
+        dfs (surr, node);
     }
-
-    return maxx;
 }
-
 int solve()
 {
     fastio;
+    int n;
     cin >> n;
-    adj = vector<vii> (n);
-    visited.assign (n, false);
+    n *= 2;
+    string s;
+    cin >> s;
+    vi spos;
+    adj = vector<vector<int>> (n);
 
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < n; i++)
     {
-        int u, v, w;
-        cin >> u >> v >> w;
-        adj[u].pb (mp (v, w));
-        adj[v].pb (mp (u, w));
+        char c = s[i];
+
+        if (c == '(')
+        {
+            spos.pb (i);
+        }
     }
 
-    // f(i) = maximum cost starting from node 'i'
-    // ans = f(0)
-    // f(i) = maximum among surrounding except visited value of w+f(surr)
-    cout << f (0);
+    for (auto i : spos) // goto a '('
+    {
+        int oc = 1;
+        int cc = 0;
+
+        for (int j = i + 1; j < n; j++) // start from '(' and find balanced bracket sequences
+        {
+            char c = s[j];
+
+            if (c == '(')
+            {
+                oc++;
+            }
+            else
+            {
+                cc++;
+            }
+
+            if (cc == oc)
+            {
+                adj[i].pb (j);
+                adj[j].pb (i);
+            }
+
+            if (cc > oc)
+            {
+                break;
+            }
+        }
+    }
+
+    int c = 0;
+    visited = vector<bool> (n, false);
+    // queue<int> todo;
+
+    for (int root = 0; root < n; root++)
+    {
+        if (visited[root])
+        {
+            continue;
+        }
+
+        c++;
+        dfs (root, -1);
+        // todo.push (root);
+        // visited[root] = true;
+        // while (todo.size() > 0)
+        // {
+        //     int node = todo.front();
+        //     todo.pop();
+        //     for (auto surr : adj[node])
+        //     {
+        //         if (visited[surr])
+        //         {
+        //             continue;
+        //         }
+        //         todo.push (surr);
+        //         visited[surr] = true;
+        //     }
+        // }
+    }
+
+    cout << c;
     return 0;
 }
 
@@ -72,7 +135,7 @@ int main()
 {
     fastio;
     int t = 1;
-    // cin >> t;
+    cin >> t;
 
     while (t--)
     {
