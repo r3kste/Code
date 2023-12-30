@@ -90,7 +90,6 @@ int solve()
     // f (i, s) = maximum energy from i to end, with s as current maximum
     // ans = f (0, 0)
     // f (i, s) = max (f (i + 1, a[i]), f (i + 1, s))
-    
     cout << f (0, 0);
     return 0;
 }
