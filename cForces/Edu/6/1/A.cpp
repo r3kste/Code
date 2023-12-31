@@ -41,10 +41,60 @@ typedef vector<vi> vvi;
 int solve()
 {
     fastio;
-    int n;
-    in (n);
+    int n, k;
+    in2 (n, k);
     vi a (n);
     vin (n);
+// nextquery:
+
+    while (k--)
+    {
+        int x;
+        in (x);
+        /*Halving Binary Search*/
+        // int l, r, m;
+        // l = 0;
+        // r = n - 1;
+        // while (l <= r)
+        // {
+        //     m = (l + r) / 2;
+        //     if (a[m] == x)
+        //     {
+        //         oyes;
+        //         goto nextquery;
+        //     }
+        //     else if (a[m] > x)
+        //     {
+        //         r = m - 1;
+        //     }
+        //     else
+        //     {
+        //         l = m + 1;
+        //     }
+        // }
+        // ono;
+        //
+        /*Jumping Binary Search*/
+        int ptr = 0;
+
+        for (int jump = 1 + n / 2; jump >= 1; jump /= 2)
+        {
+            while (ptr + jump < n && a[ptr + jump] <= x)
+            {
+                ptr += jump;
+            }
+        }
+
+        if (a[ptr] == x)
+        {
+            oyes;
+        }
+        else
+        {
+            ono;
+        }
+    }
+
     return 0;
 }
 
@@ -52,7 +102,7 @@ int main()
 {
     fastio;
     int t = 1;
-    in (t);
+    // in (t);
 
     while (t--)
     {

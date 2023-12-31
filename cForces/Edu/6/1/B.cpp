@@ -41,10 +41,50 @@ typedef vector<vi> vvi;
 int solve()
 {
     fastio;
-    int n;
-    in (n);
+    int n, k;
+    in2 (n, k);
+    n += 2;
     vi a (n);
-    vin (n);
+    a[0] = INT32_MIN;
+    rep (_, n - 2) in (a[_ + 1]);
+    a[n - 1] = INT32_MAX;
+
+    while (k--)
+    {
+        int x;
+        in (x);;
+        /*Halving Binary Search*/
+        // int l, r, m;
+        // l = 0;
+        // r = n - 1;
+        // while (l < r - 1)
+        // {
+        //     m = (l + r) / 2;
+        //     if (a[m] > x)
+        //     {
+        //         r = m;
+        //     }
+        //     else
+        //     {
+        //         l = m;
+        //     }
+        // }
+        // o (l);
+        /*Jumping Binary Search*/
+        int ptr = 0;
+
+        for (int jump = n / 2; jump >= 1; jump /= 2)
+        {
+            while (ptr + jump < n && a[ptr + jump] <= x)
+            {
+                ptr += jump;
+            }
+        }
+
+        o (ptr);
+    }
+
+    br;
     return 0;
 }
 
@@ -52,7 +92,7 @@ int main()
 {
     fastio;
     int t = 1;
-    in (t);
+    // in (t);
 
     while (t--)
     {
