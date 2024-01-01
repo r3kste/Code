@@ -18,7 +18,7 @@ typedef vector<vi> vvi;
 #define F first
 #define S second
 #define mp make_pair
-#define pb(__,_) __.push_back(_);
+#define pb push_back
 #define all(a) (a).begin(), (a).end()
 #define sz(a) ((int) (a).size())
 

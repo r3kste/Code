@@ -47,7 +47,7 @@ void dfs (int node, int parent, int streak)
 
     if (newstreak <= m)
     {
-        if (adj[node].size() == 1)
+        if (adj[node].size() == 1 && node != 0)
         {
             c++;
         }
