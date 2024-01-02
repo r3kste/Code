@@ -18,7 +18,7 @@ typedef vector<vi> vvi;
 #define F first
 #define S second
 #define mp make_pair
-#define pb(__,_) __.push_back(_);
+#define pb push_back
 #define all(a) (a).begin(), (a).end()
 #define sz(a) ((int) (a).size())
 
@@ -27,7 +27,7 @@ typedef vector<vi> vvi;
 #define in(_) cin >> _;
 #define in2(_0, _1) cin >> _0 >> _1;
 #define in3(_0, _1, _2) cin >> _0 >> _1 >> _2;
-#define vin(n) rep (_, n) { in (a[_]) }
+#define vin(a) rep (_, sz (a)) { in (a[_]) }
 #define vvin(r, c) rep(__,r) { rep(_,c) { in (matrix[__][_]) } }
 #define br cout << "\n";
 #define out(_,__) cout << _ << __;
@@ -41,49 +41,34 @@ typedef vector<vi> vvi;
 int solve()
 {
     fastio;
-    int n, k;
-    in2 (n, k);
-    n += 2;
-    vi a (n);
-    a[0] = INT32_MIN;
-    rep (_, n - 2) in (a[_ + 1]);
-    a[n - 1] = INT32_MAX;
+    ll w, h, n;
+    in3 (w, h, n);
+    ll l = 1;
+    ll r = 1;
 
-    while (k--)
+    while (((r / w) * (r / h)) < n)
     {
-        int x;
-        in (x);
-        /*Halving Binary Search*/
-        // int l, r, m;
-        // l = 0;
-        // r = n - 1;
-        // while (l < r - 1)
-        // {
-        //     m = (l + r) / 2;
-        //     if (a[m] > x)
-        //     {
-        //         r = m;
-        //     }
-        //     else
-        //     {
-        //         l = m;
-        //     }
-        // }
-        // o (l);
-        /*Jumping Binary Search*/
-        int ptr = 0;
-
-        for (int jump = n / 2; jump >= 1; jump /= 2)
-        {
-            while (ptr + jump < n && a[ptr + jump] <= x)
-            {
-                ptr += jump;
-            }
-        }
-
-        o (ptr);
+        r *= 2;
     }
 
+    ll m = 0;
+
+    while (l < r - 1)
+    {
+        m = l + (r - l) / 2;
+        bool valid = (((m / w) * (m / h)) >= n);
+
+        if (valid)
+        {
+            r = m;
+        }
+        else
+        {
+            l = m;
+        }
+    }
+
+    o (r);
     br;
     return 0;
 }

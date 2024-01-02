@@ -38,24 +38,39 @@ typedef vector<vi> vvi;
 #define oyes out("YES","\n")
 #define ono out("NO", "\n")
 
-int solve()
+int bsearch_l (vi a, int x)
 {
-    fastio;
-    int n;
-    in (n);
-    vi a (n);
-    vin (a);
-    return 0;
-}
+    int n = sz (a);
+    int ptr = 0;
 
+    for (int jump = n / 2; jump >= 1; jump /= 2)
+    {
+        while (ptr + jump < n && a[ptr + jump] <= x)
+        {
+            ptr += jump;
+        }
+    }
+
+    return (ptr);
+}
+int bsearch_r (vi a, int x)
+{
+    vi b = a;
+    reverse (all (b));
+    int n = sz (b);
+    int ptr = 0;
+
+    for (int jump = n / 2; jump >= 1; jump /= 2)
+    {
+        while (ptr + jump < n && b[ptr + jump] >= x)
+        {
+            ptr += jump;
+        }
+    }
+
+    return (n - 1 - ptr);
+}
 int main()
 {
-    fastio;
-    int t = 1;
-    in (t);
-
-    while (t--)
-    {
-        solve();
-    }
+    return 0;
 }

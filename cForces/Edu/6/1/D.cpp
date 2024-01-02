@@ -42,46 +42,22 @@ int solve()
 {
     fastio;
     int n, k;
-    in2 (n, k);
+    in (n);
     n += 2;
     vi a (n);
     a[0] = INT32_MIN;
     rep (_, n - 2) in (a[_ + 1]);
     a[n - 1] = INT32_MAX;
+    sort (all (a));
+    in (k);
 
     while (k--)
     {
-        int x;
-        in (x);
-        /*Halving Binary Search*/
-        // int l, r, m;
-        // l = 0;
-        // r = n - 1;
-        // while (l < r - 1)
-        // {
-        //     m = (l + r) / 2;
-        //     if (a[m] > x)
-        //     {
-        //         r = m;
-        //     }
-        //     else
-        //     {
-        //         l = m;
-        //     }
-        // }
-        // o (l);
-        /*Jumping Binary Search*/
-        int ptr = 0;
-
-        for (int jump = n / 2; jump >= 1; jump /= 2)
-        {
-            while (ptr + jump < n && a[ptr + jump] <= x)
-            {
-                ptr += jump;
-            }
-        }
-
-        o (ptr);
+        int l, r;
+        in2 (l, r);
+        int R = upper_bound (all (a), r) - a.begin();
+        int L = lower_bound (all (a), l) - a.begin();
+        o (R - L);
     }
 
     br;

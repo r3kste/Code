@@ -28,7 +28,7 @@ int solve()
 {
     fastio;
     ll y, x;
-    cin >> y >> x;;
+    cin >> y >> x;
     cout << (100 * y) / (100 + x);
     return 0;
 }

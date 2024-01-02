@@ -186,7 +186,7 @@ int solve()
         }
         else
         {
-            c++;;
+            c++;
         }
     }
 

@@ -48,6 +48,7 @@ int solve()
     a[0] = INT32_MIN;
     rep (_, n - 2) in (a[_ + 1]);
     a[n - 1] = INT32_MAX;
+    reverse (all (a));
 
     while (k--)
     {
@@ -69,19 +70,19 @@ int solve()
         //         l = m;
         //     }
         // }
-        // o (l);
+        // o (n - 1 - l);
         /*Jumping Binary Search*/
         int ptr = 0;
 
         for (int jump = n / 2; jump >= 1; jump /= 2)
         {
-            while (ptr + jump < n && a[ptr + jump] <= x)
+            while (ptr + jump < n && a[ptr + jump] >= x)
             {
                 ptr += jump;
             }
         }
 
-        o (ptr);
+        o (n - 1 - ptr);
     }
 
     br;
