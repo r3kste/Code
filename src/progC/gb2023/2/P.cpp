@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MOD (LL)(1e9 + 7)
+#define fastio                        \
+    ios_base::sync_with_stdio(false); \
+    cin.tie(NULL);
+
+#define endl "\n"
+#define yesno(a) cout << ((a) ? "Yes" : "No");
+
+#define F first
+#define S second
+#define mp make_pair
+#define pb push_back
+#define all(a) (a).begin(), (a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+
+typedef long long int ll;
+typedef unsigned long long int LL;
+typedef pair<int, int> ii;
+
+typedef vector<int> vi;
+typedef vector<pair<int, int>> vii;
+typedef vector<long long int> vll;
+
+int solve() {
+    fastio;
+    int n, req;
+    cin >> n >> req;
+    vi a (n);
+
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
+    int l = 0, r = a[n - 1] / req + 1; //limits
+
+    while (l <= r) {
+        int mid = (l + r) / 2;
+        int path_until = a[0] + mid - 1;
+        int patchable = 1;
+
+        for (auto i : a) {
+            if (i > path_until) {
+                path_until = i + mid - 1;
+                patchable++;
+            }
+        }
+
+        if (patchable <= req) {
+            r = mid - 1;
+        } else {
+            l = mid + 1;
+        }
+    }
+
+    cout << l;
+    return 0;
+}
+
+int main() {
+    fastio;
+    int t = 1;
+    cin >> t;
+
+    while (t--) {
+        solve();
+        cout << "\n";
+    }
+}
