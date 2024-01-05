@@ -38,19 +38,72 @@ typedef vector<vi> vvi;
 #define oyes out("YES","\n")
 #define ono out("NO", "\n")
 
+bool find (vc s, string p, int n) {
+    map<char, deque<int>> l;
+    rep (__, n) {
+        if (s[__] == '.')
+            continue;
+
+        l[s[__]].pb (__);
+    }
+    int starti = l[p[0]].front();
+    l[p[0]].pop_front();
+
+    for (int i = 1; i < sz (p); i++) {
+        if (sz (l[p[i]]) == 0)
+            return false;
+
+        int nexti = upper_bound (all (l[p[i]]), starti) - l[p[i]].begin();
+
+        if (nexti >= sz (l[p[i]]))
+            return false;
+
+        starti = l[p[i]][nexti];
+
+        for (int j = 0; j <= nexti; j++)
+            l[p[i]].pop_front();
+    }
+
+    return true;
+}
+
+bool valid (vc s, string p, vi a, int x, int n) {
+    rep (__, x) {
+        s[a[__] - 1] = '.';
+    }
+    return find (s, p, n);
+}
 int solve() {
     fastio;
-    int n;
-    in (n);
+    string t, p;
+    in2 (t, p);
+    int n = sz (t);
+    vc s(n);
+    rep (__, n) s[__] = t[__];
     vi a (n);
     vin (a);
+    int l = 0;
+    int r = n;
+    int n_iter = 100;
+
+    while (n_iter--) {
+        int m = l + (r - l) / 2;
+
+        if (valid (s, p, a, m, n))
+            l = m;
+        else
+            r = m;
+    }
+
+    o (l);
+    br;
     return 0;
 }
 
 int main() {
     fastio;
     int t = 1;
-    in (t);
+    // in (t);
 
     while (t--)
         solve();

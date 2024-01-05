@@ -5,13 +5,21 @@
             "label": "C/C++: g++ build active file",
             "command": "/usr/bin/g++",
             "args": [
-                "-O2",
+                // "-O2",
                 "-Wall",
                 "-g",
                 "${file}",
                 "-o",
-                "${workspaceFolder}/.out"
+                "${workspaceFolder}/target/.out"
             ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": false
+            },
             "options": {
                 "cwd": "${fileDirname}"
             },
@@ -27,7 +35,7 @@
         {
             "label": "cargo",
             "type": "shell",
-            "command": "cd ${fileDirname} && cargo run",
+            "command": "cd ${fileDirname} && cargo run --bin ${fileBasenameNoExtension}",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
