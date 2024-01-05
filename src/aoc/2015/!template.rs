@@ -14,30 +14,9 @@ fn main() {
 }
 
 fn part1(input_file: &String) -> i32 {
-    let mut oc: i32 = 0;
-    let mut cc: i32 = 0;
-    for char in input_file.chars() {
-        if char == ')' {
-            cc += 1;
-        } else {
-            oc += 1;
-        }
-    }
-    return (oc - cc).abs();
+    return 0;
 }
 
 fn part2(input_file: &String) -> i32 {
-    let mut oc: i32 = 0;
-    let mut cc: i32 = 0;
-    for char in input_file.chars() {
-        if char == ')' {
-            cc += 1;
-        } else {
-            oc += 1;
-        }
-        if cc > oc {
-            return cc + oc;
-        }
-    }
     return 0;
 }

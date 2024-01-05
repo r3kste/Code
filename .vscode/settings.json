@@ -1,0 +1,6 @@
+{
+    "rust-analyzer.runnables.extraEnv": {
+        "FILE_DIR": "${fileDirname}"
+    },
+    "rust-analyzer.showUnlinkedFileNotification": false,
+}
