@@ -29,7 +29,9 @@ fn part2(input_file: &String) -> i32 {
 
 fn main() {
     let input_file = std::fs::read_to_string(
-        std::path::PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap())
+        std::path::PathBuf::from(std::env::var("FILE_DIR").unwrap())
+            .parent()
+            .unwrap()
             .join(".inputs/day01.txt"),
     )
     .expect("File Not Found!");

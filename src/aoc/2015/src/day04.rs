@@ -26,13 +26,17 @@ fn part2(input_file: &String) -> i32 {
 
 fn main() {
     let input_file = std::fs::read_to_string(
-        std::path::PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap())
+        std::path::PathBuf::from(std::env::var("FILE_DIR").unwrap())
+            .parent()
+            .unwrap()
             .join(".inputs/day04.txt"),
     )
     .expect("File Not Found!");
 
+    println!("Takes quite a bit of time (around 20 seconds)");
+
     let _part1ans: i32 = part1(&input_file);
     let _part2ans: i32 = part2(&input_file);
 
-    println!("Day 01\nPart 1: {}\nPart 2: {}", _part1ans, _part2ans);
+    println!("Day 04 \nPart 1: {}\nPart 2: {}", _part1ans, _part2ans);
 }

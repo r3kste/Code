@@ -40,13 +40,20 @@ typedef vector<vi> vvi;
 
 int solve() {
     fastio;
-    int a, b;
-    in2 (a, b);
+    int n;
+    in (n);
+    vi a (n);
+    vin (a);
+    ll sum = 0;
 
-    if ((a + b) % 2 == 0) {
-        o ("Bob");
+    for (auto e : a) {
+        sum += e;
+    }
+
+    if (ceil ((double)sqrt (sum)) == floor ((double)sqrt (sum))) {
+        oyes;
     } else {
-        o ("Alice");
+        ono;
     }
 
     return 0;
