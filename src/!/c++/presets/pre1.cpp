@@ -27,8 +27,8 @@ typedef vector<vi> vvi;
 #define in(_) cin >> _;
 #define in2(_0, _1) cin >> _0 >> _1;
 #define in3(_0, _1, _2) cin >> _0 >> _1 >> _2;
-#define vin(a) rep (_, sz (a)) { in (a[_]) }
-#define vvin(r, c) rep(__,r) { rep(_,c) { in (matrix[__][_]) } }
+#define vin(a) { rep (_, sz (a)) { in (a[_]) }}
+#define vvin(r, c) { rep(__,r) { rep(_,c) { in (matrix[__][_]) } } }
 #define br cout << "\n";
 #define out(_,__) cout << _ << __;
 #define o(_) out(_, " ")

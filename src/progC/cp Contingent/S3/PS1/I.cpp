@@ -42,44 +42,48 @@ int n;
 int m;
 vector<vector<int>> adj;
 vector<bool> visited;
-vi distances;
-int dfs (int node, int target, int dist) {
-    visited[node] = true;
+vector<vector<int>> distances;
+int d (int start, int target) {
+    if (distances[start][target] != MOD) {
+        return distances[start][target];
+    } else {
+        queue<ii> todo;
+        visited = vb (n, false);
+        todo.push (mp (start, 0));
 
-    if (node == target) {
-        distances.pb (dist);
-    }
+        while (!todo.empty()) {
+            int node = todo.front().F;
+            int dist = todo.front().S;
+            todo.pop();
 
-    for (auto surr : adj[node]) {
-        if (visited[surr]) {
-            continue;
+            if (node == target) {
+                distances[start][target] = dist;
+                distances[target][start] = dist;
+                return dist;
+            }
+
+            if (visited[node]) {
+                continue;
+            }
+
+            visited[node] = true;
+
+            for (auto surr : adj[node]) {
+                todo.push (mp (surr, dist + 1));
+            }
         }
-
-        dfs (surr, target, dist + 1);
     }
 
-    return 0;
+    return MOD;
 }
-int d (int start, int end) {
-    int min = MOD;
-    visited = vb (n, false);
-    distances.clear();
-    dfs (start, end, 0);
 
-    for (auto distance : distances) {
-        if (distance < min) {
-            min = distance;
-        }
-    }
-
-    return min;
-}
 int solve() {
     fastio;
     int s, t;
     in2 (n, m) in2 (s, t);
     adj = vector<vector<int>> (n);
     visited = vector<bool> (n, false);
+    distances = vector<vector<int>> (n, vector<int> (n, MOD));
 
     for (int i = 0; i < m; i++) {
         int u, v;
@@ -90,7 +94,27 @@ int solve() {
         adj[v].pb (u);
     }
 
-    o (d (0, 3));
+    s--;
+    t--;
+    int cur_dist = d (s, t);
+    ll ans = 0;
+
+    for (int a = 0; a < n; a++) {
+        for (int b = 0; b < n; b++) {
+            if (a == b || find (adj[a].begin(), adj[a].end(), b) != adj[a].end()) { //if b is already directly connected to a
+                continue;
+            }
+
+            int dist1 = d (s, a) + d (b, t) + 1; // s->a->b->t
+            int dist2 = d (s, b) + d (a, t) + 1; // s->b->a->t
+
+            if (min (dist1, dist2) >= cur_dist) {
+                ans ++;
+            }
+        }
+    }
+
+    o (ans / 2);
     br;
     return 0;
 }

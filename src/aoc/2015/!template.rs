@@ -16,7 +16,8 @@ fn main() {
     .expect("File Not Found!");
 
     let _part1ans: i32 = part1(&input_file);
-    let _part2ans: i32 = part2(&input_file);
+    println!("Day 0X\nPart 1: {}", _part1ans);
 
-    println!("Day 0X\nPart 1: {}\nPart 2: {}", _part1ans, _part2ans);
+    let _part2ans: i32 = part2(&input_file);
+    println!("Part 2: {}", _part2ans);
 }
