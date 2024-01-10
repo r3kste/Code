@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use itertools::enumerate;
-
 fn part1(input_file: &String) -> i32 {
     let known: HashMap<&str, i32> = [
         ("children", 3),
@@ -34,7 +32,7 @@ fn part1(input_file: &String) -> i32 {
 
         let mut possible = true;
         for (property, quantity) in [info1, info2, info3] {
-            if (known[property] != quantity) {
+            if known[property] != quantity {
                 possible = false;
                 break;
             }
@@ -79,7 +77,7 @@ fn part2(input_file: &String) -> i32 {
         let mut possible = true;
         for (property, quantity) in [info1, info2, info3] {
             if property == "cats" || property == "trees" {
-                if (known[property] >= quantity) {
+                if known[property] >= quantity {
                     possible = false;
                     break;
                 }
@@ -88,7 +86,7 @@ fn part2(input_file: &String) -> i32 {
                     possible = false;
                     break;
                 }
-            } else if (known[property] != quantity) {
+            } else if known[property] != quantity {
                 possible = false;
                 break;
             }
