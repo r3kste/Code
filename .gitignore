@@ -6,9 +6,8 @@ t.py
 *.dot
 *.png
 *.pdf
-target/
 submissions/
-
+/.cph
 
 # Added by cargo
 
