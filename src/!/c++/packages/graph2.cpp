@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define INF LLONG_MAX
 /*
 Unweighted Graph
 */
@@ -11,181 +10,47 @@ struct Graph {
     vector<bool> visited;
     vector<int> roots;
 
+    /*
+    vector<int> root_of;
+    vector<int> parent_of;
+    map<int, int> cluster_size;
+    vector<int> height, eulerian, first, segtree, subtree_size;
+    int timer;
+    vector<int> tin, tout;
+    int depth;
+    */
+
     Graph (int no_of_nodes) {
         adj.resize (no_of_nodes);
         n = no_of_nodes;
     }
 
-    /*
-    Initializes & (by default) Populates:
-        1. visited
-    */
     void init (bool fill = true) {
         visited.assign (n, false);
-
-        if (fill) {
-            DFS ();
-        }
-    }
-
-    /*
-    Depopulates:
-        1. visited
-    */
-    void clear() {
-        visited.clear();
-    }
-
-    /*
-    Populates: adj (with stdin)
-    */
-    void input (int m) {
-        for (int i = 0; i < m; i++) {
-            int u, v;
-            cin >> u >> v;
-            u--;
-            v--;
-            adj[u].push_back (v);
-            adj[v].push_back (u);
-        }
-    }
-    void input() {
-        for (int i = 0; i < n; i++) {
-            int u;
-            cin >> u;
-            u--;
-
-            if (u == -2) {
-                roots.push_back (i);
-            } else {
-                adj[u].push_back (i);
-                adj[i].push_back (u);
-            }
-        }
-    }
-
-    /*
-    Reopulates (via depth-first traversal):
-        1. visited
-    */
-    void DFS () {
-        visited.assign (n, false);
-
-        for (int root : roots) {
-            dfs (root);
-        }
-    }
-    void dfs (int node) {
-        visited[node] = true;
-
-        for (auto to : adj[node]) {
-            if (!visited[to]) {
-                dfs (to);
-            }
-        }
-    }
-
-    void bfs (int root) {
-        queue<int> q;
-        q.push (root);
-        visited[root] = true;
-
-        while (!q.empty()) {
-            int vertex = q.front();
-            q.pop();
-
-            for (int next : adj[vertex]) {
-                if (!visited[next]) {
-                    visited[next] = true;
-                    q.push (next);
-                }
-            }
-        }
-    }
-
-    /*
-    Repopulates: roots
-    */
-    void find_components () {
-        visited.assign (n, false);
-        roots.clear();
-
-        for (int vertex = 0; vertex < n; ++vertex) {
-            if (!visited[vertex]) {
-                roots.push_back (vertex);
-                dfs (vertex);
-            }
-        }
-    }
-};
-
-/*
-Unweighted GRAPH
-*/
-struct GRAPH {
-    vector<vector<int>> adj;
-    int n;
-    vector<bool> visited;
-
-    vector<int> height, eulerian, first, segtree, subtree_size;
-    vector<int> roots;
-    int timer;
-    int depth;
-    vector<int> tin, tout;
-
-    GRAPH (int no_of_nodes) {
-        adj.resize (no_of_nodes);
-        n = no_of_nodes;
-    }
-
-    /*
-    Repopulates:
-        1. visited
-        2. height
-        3. first
-        4. eulerian
-        5. tin
-        6. tout
-        7. subtree_size
-        8. timer
-        9. depth
-        10. segtree (dependent on Population)
-    */
-    void init (bool fill = true) {
-        visited.assign (n, false);
+        /*
         height.resize (n);
         first.resize (n);
-        eulerian.reserve (n * 2);
+        /*
+        timer = 0;
         tin.resize (n);
         tout.resize (n);
         subtree_size.resize (n);
-        timer = 0;
         depth = -1;
+        */
 
         if (fill) {
             DFS ();
-            //
+            /*
             int m = eulerian.size();
             segtree.resize (m * 4);
             build (1, 0, m - 1);
+            */
         }
     }
 
-    /*
-    Depopulates:
-        1. visited
-        2. height
-        3. first
-        4. eulerian
-        5. tin
-        6. tout
-        7. subtree_size
-        8. timer
-        9. depth
-        10. segtree (dependent on Population)
-    */
     void clear() {
         visited.clear();
+        /*
         height.clear();
         first.clear();
         eulerian.clear();
@@ -195,13 +60,11 @@ struct GRAPH {
         timer = 0;
         depth = -1;
         segtree.clear();
+        */
     }
 
-    /*
-    Populates: adj (with stdin)
-    */
-    void input (int m) {
-        for (int i = 0; i < m; i++) {
+    void input (int no_of_edges) {
+        for (int i = 0; i < no_of_edges; i++) {
             int u, v;
             cin >> u >> v;
             u--;
@@ -224,49 +87,52 @@ struct GRAPH {
             }
         }
     }
-    /*
-    Repopulates (via depth-first traversal):
-        1. visited
-        2. tin
-        3. height
-        4. first
-        5. eulerian
-        6. depth
-        7. subtree_size
-        8. tout
-    */
-    void DFS (int h = 0) {
+
+    void DFS () {
+        visited.assign (n, false);
+
+        if (roots.size() == 0) {
+            roots.push_back (0);
+        }
+
         for (int root : roots) {
-            dfs (root, h);
+            dfs (root, 0, -1, root);
         }
     }
-    void dfs (int node, int h = 0) {
+    void dfs (int node, int level, int parent, int root) {
         visited[node] = true;
+        /*
+        root_of[node] = root;
+        parent_of[node] = parent;
+        cluster_size[root]++;
         tin[node] = ++timer;
-        height[node] = h;
+        height[node] = level;
         first[node] = eulerian.size();
         eulerian.push_back (node);
-        depth = max (depth, h);
+        depth = max (depth, level);
+        */
 
         for (int to : adj[node]) {
             if (!visited[to]) {
-                dfs (to, h + 1);
+                dfs (to, level + 1, node, root);
+                /*
                 eulerian.push_back (node);
                 subtree_size[node] += subtree_size[to];
+                */
             }
         }
 
+        /*
         subtree_size[node]++;
         tout[node] = ++timer;
+        */
     }
 
-    void bfs (int root, int h = 0) {
+    void bfs (int root, int level = 0) {
         queue<int> q;
         vector<bool> visited (n);
-        vector<int> parents (n);
         q.push (root);
         visited[root] = true;
-        parents[root] = -1;
 
         while (!q.empty()) {
             int vertex = q.front();
@@ -276,31 +142,23 @@ struct GRAPH {
                 if (!visited[u]) {
                     visited[u] = true;
                     q.push (u);
-                    height[u] = height[vertex] + 1;
-                    parents[u] = vertex;
                 }
             }
         }
     }
 
-    /*
-    Repopulates: roots
-    */
-    void find_components () {
+    void clusters () {
         fill (visited.begin(), visited.end(), false);
         roots.clear();
 
         for (int vertex = 0; vertex < n; ++vertex) {
             if (!visited[vertex]) {
                 roots.push_back (vertex);
-                dfs (vertex);
+                dfs (vertex, 0, -1, vertex);
             }
         }
     }
-
     /*
-    Checks whether parents is an ancestor (direct or indirect) of child
-    */
     bool is_ancestor (int parents, int child) {
         return tin[parents] <= tin[child] && tout[parents] >= tout[child];
     }
@@ -348,28 +206,26 @@ struct GRAPH {
 
         return query (1, 0, eulerian.size() - 1, left, right);
     }
+    */
 };
 
 /*
 Weighted Graph
 */
-struct Graph_EV {
+// #define INF LLONG_MAX
+#define INF 100000000000000000
+struct graph_ev {
     using pii = pair<int, int>;
     vector<vector<pii>> adj;
     int n;
     vector<bool> visited;
     vector<int> roots;
 
-    Graph_EV (int no_of_nodes) {
+    graph_ev (int no_of_nodes) {
         adj.resize (no_of_nodes);
         n = no_of_nodes;
     }
 
-    /*
-    Initializes & (by default) Populates:
-        1. visited
-        2. depth
-    */
     void init (bool fill = true) {
         visited.assign (n, false);
 
@@ -378,20 +234,12 @@ struct Graph_EV {
         }
     }
 
-    /*
-    Depopulates:
-        1. visited
-        2. depth
-    */
     void clear() {
         visited.clear();
     }
 
-    /*
-    Populates: adj (with stdin)
-    */
-    void input (int m) {
-        for (int i = 0; i < m; i++) {
+    void input (int no_of_edges) {
+        for (int i = 0; i < no_of_edges; i++) {
             int u, v, w;
             cin >> u >> v >> w;
             u--;
@@ -415,13 +263,12 @@ struct Graph_EV {
         }
     }
 
-    /*
-    Populates (via depth-first traversal):
-        1. visited (resets)
-        2. depth
-    */
     void DFS () {
         visited.assign (n, false);
+
+        if (roots.size() == 0) {
+            roots.push_back (0);
+        }
 
         for (int root : roots) {
             dfs (root);
@@ -455,9 +302,6 @@ struct Graph_EV {
         }
     }
 
-    /*
-    Repopulates: roots
-    */
     void find_components () {
         visited.assign (n, false);
         roots.clear();
@@ -470,12 +314,7 @@ struct Graph_EV {
         }
     }
 
-    /*
-    Populates:
-        1. distances => minimum distance starting from start to every other node.
-        2. parents => parents, for traversal
-    */
-    void dijkstra_pqu (int start, vector<long long int> &distances, vector<int> &parents) {
+    void dijkstra (int start, vector<long long int> &distances, vector<int> &parents) {
         distances.assign (n, INF);
         parents.assign (n, -1);
         distances[start] = 0;
@@ -523,7 +362,7 @@ int solve() {
     cin.tie (NULL);
     int n, m;
     cin >> n >> m;
-    GRAPH graph (n);
+    Graph g (n);
     return 0;
 }
 

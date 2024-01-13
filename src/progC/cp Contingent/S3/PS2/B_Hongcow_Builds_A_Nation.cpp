@@ -37,36 +37,32 @@ typedef vector<vi> vvi;
 
 #define oyes out("YES","\n")
 #define ono out("NO", "\n")
-
 #define INF LLONG_MAX
 /*
-Weighted Graph
+Unweighted Graph
 */
-struct Graph_EV {
-    using pii = pair<int, int>;
-    vector<vector<pii>> adj;
+struct Graph {
+    vector<vector<int>> adj;
     int n;
     vector<bool> visited;
     vector<int> roots;
-    vb possible;
+    vector<int> governments;
+    vi governed_by;
+    int count = 0;
+    map<int, int> gov_pow;
 
-    void operator()() {
-        cout << "what\n";
-    }
-    Graph_EV (int no_of_nodes) {
+    Graph (int no_of_nodes) {
         adj.resize (no_of_nodes);
+        governed_by.assign (no_of_nodes, -1);
         n = no_of_nodes;
-        init (false);
     }
 
     /*
     Initializes & (by default) Populates:
         1. visited
-        2. depth
     */
     void init (bool fill = true) {
         visited.assign (n, false);
-        possible.assign (n, true);
 
         if (fill) {
             DFS ();
@@ -76,7 +72,6 @@ struct Graph_EV {
     /*
     Depopulates:
         1. visited
-        2. depth
     */
     void clear() {
         visited.clear();
@@ -85,55 +80,68 @@ struct Graph_EV {
     /*
     Populates: adj (with stdin)
     */
-    void input (int m) {
-        for (int i = 0; i < m; i++) {
-            int u, v, w;
-            cin >> u >> v >> w;
+    void input (int no_of_edges) {
+        for (int i = 0; i < no_of_edges; i++) {
+            int u, v;
+            cin >> u >> v;
             u--;
             v--;
-            adj[u].push_back (make_pair (v, w));
-            adj[v].push_back (make_pair (u, w));
+            adj[u].push_back (v);
+            adj[v].push_back (u);
         }
     }
     void input() {
         for (int i = 0; i < n; i++) {
-            int u, w;
-            cin >> u >> w;
+            int u;
+            cin >> u;
             u--;
 
             if (u == -2) {
                 roots.push_back (i);
             } else {
-                adj[u].push_back (make_pair (i, w));
-                adj[i].push_back (make_pair (u, w));
+                adj[u].push_back (i);
+                adj[i].push_back (u);
             }
         }
     }
 
     /*
-    Populates (via depth-first traversal):
-        1. visited (resets)
-        2. depth
+    Reopulates (via depth-first traversal):
+        1. visited
     */
     void DFS () {
         visited.assign (n, false);
-        possible[roots[0]] = false;
 
         for (int root : roots) {
             dfs (root);
         }
     }
+    void DFS_gov () {
+        visited.assign (n, false);
+
+        for (int government : governments) {
+            count = 0;
+            dfs_gov (government, government);
+            gov_pow[government] = count;
+        }
+    }
     void dfs (int node) {
         visited[node] = true;
 
-        for (auto [to, weight] : adj[node]) {
+        for (auto to : adj[node]) {
             if (!visited[to]) {
-                if (weight == 0) {
-                    possible[node] = false;
-                    possible[to] = false;
-                }
-
                 dfs (to);
+            }
+        }
+    }
+    void dfs_gov (int node, int government) {
+        count++;
+        visited[node] = true;
+        governed_by[node] = government;
+
+        for (auto to : adj[node]) {
+            if (!visited[to]) {
+                dfs_gov (to, government);
             }
         }
     }
@@ -147,7 +155,7 @@ struct Graph_EV {
             int vertex = q.front();
             q.pop();
 
-            for (auto [next, weight] : adj[vertex]) {
+            for (int next : adj[vertex]) {
                 if (!visited[next]) {
                     visited[next] = true;
                     q.push (next);
@@ -170,77 +178,84 @@ struct Graph_EV {
             }
         }
     }
-
-    /*
-    Populates:
-        1. distances => minimum distance starting from start to every other node.
-        2. parents => parents, for traversal
-    */
-    void dijkstra_pqu (int start, vector<long long int> &distances, vector<int> &parents) {
-        distances.assign (n, INF);
-        parents.assign (n, -1);
-        distances[start] = 0;
-        using pii = pair<int, int>;
-        priority_queue<pii, vector<pii>, greater<pii>> q;
-        q.push ({0, start});
-
-        while (!q.empty()) {
-            int node = q.top().second;
-            int dist = q.top().first;
-            q.pop();
-
-            if (dist != distances[node]) {
-                continue;
-            }
-
-            for (auto [to, len] : adj[node]) {
-                if (distances[node] + len < distances[to]) {
-                    distances[to] = distances[node] + len;
-                    parents[to] = node;
-                    q.push ({distances[to], to});
-                }
-            }
-        }
-    }
-    vector<int> path (int start, int target, vector<int> const & parents, int offset) {
-        vector<int> path;
-
-        for (int v = target; v != start; v = parents[v]) {
-            if (v == -1) {
-                return vector<int> (1, -1);
-            }
-
-            path.push_back (v + offset);
-        }
-
-        path.push_back (start + offset);
-        reverse (path.begin(), path.end());
-        return path;
-    }
 };
+long long int power (long long int x, int y, long long int mod) {
+    long long int o = 1;
+    x = x % mod;
 
+    while (y > 0) {
+        if (y & 1) {
+            o = (o * x) % mod;
+        }
+
+        y >>= 1;
+        x = (x * x) % mod;
+    }
+
+    return o;
+}
+long long int inv (long long int n, long long int mod) {
+    return power (n, mod - 2, mod);
+}
+long long int mul (long long int x, long long int y, long long int mod) {
+    return (x * y) % mod;
+}
+long long int div (long long int x, long long int y, long long int mod) {
+    return mul (x, inv (y, mod), mod);
+}
+long long int ncr (long long int n, long long int r, long long int mod) {
+    if (n < r) {
+        return 0;
+    }
+
+    if (r == 0) {
+        return 1;
+    }
+
+    if (n - r < r) { // Make sure r is the least one possible
+        return ncr (n, n - r, mod);
+    }
+
+    long long int o = 1;
+
+    for (int i = r; i > 0; i--) {
+        o = div (mul (o, n - i + 1, mod), i, mod);
+    }
+
+    return o;
+}
 int solve() {
     fastio;
-    int n;
-    in (n);
-    Graph_EV g (n);
-    g.input();
-    g.DFS();
-    vb pos = g.possible;
-    bool flag = false;
+    int n, m, k;
+    in3 (n, m, k);
+    Graph g (n);
 
-    for (int i = 0; i < n; i++) {
-        if (pos[i]) {
-            flag = true;
-            cout << i + 1 << " ";
+    for (int i = 0; i < k; i++) {
+        int temp;
+        cin >> temp;
+        g.governments.push_back (temp - 1);
+    }
+
+    g.input (m);
+    g.init (false);
+    g.DFS_gov();
+    int max_strength = -1;
+    int neutral = 0;
+    ll total = 0;
+
+    for (auto [government, strength] : g.gov_pow) {
+        neutral += strength;
+        total += ncr (strength, 2, MOD);
+
+        if (strength > max_strength) {
+            max_strength = strength;
         }
     }
 
-    if (!flag) {
-        cout << -1;
-    }
-
-    br;
+    neutral = n - neutral;
+    total -= ncr (max_strength, 2, MOD);
+    total += ncr (max_strength + neutral, 2, MOD);
+    o (total - m) br
     return 0;
 }
 
