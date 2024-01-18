@@ -42,8 +42,26 @@ int solve() {
     fastio;
     int n;
     in (n);
-    vi a (n);
-    vin (a);
+    string a, b, c;
+    in3 (a, b, c);
+
+    if (a == b && b == c) {
+        ono
+        return 0;
+    }
+
+    for (int i = 0; i < n; i++) {
+        char one = a[i];
+        char two = b[i];
+        char thee = c[i];
+
+        if (one != thee && two != thee) {
+            oyes;
+            return 0;
+        }
+    }
+
+    ono;
     return 0;
 }
 

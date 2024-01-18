@@ -42,7 +42,7 @@ typedef vector<vi> vvi;
 /*
 Weighted Graph
 */
-struct graph_ev {
+struct Graph_EV {
     using pii = pair<int, int>;
     vector<vector<pii>> adj;
     int n;
@@ -53,7 +53,7 @@ struct graph_ev {
     void operator()() {
         cout << "what\n";
     }
-    graph_ev (int no_of_nodes) {
+    Graph_EV (int no_of_nodes) {
         adj.resize (no_of_nodes);
         n = no_of_nodes;
         init (false);
@@ -223,7 +223,7 @@ int solve() {
     fastio;
     int n;
     in (n);
-    graph_ev g (n);
+    Graph_EV g (n);
     g.input();
     g.DFS();
     vb pos = g.possible;

@@ -9,58 +9,55 @@ struct Graph {
     int n;
     vector<bool> visited;
     vector<int> roots;
-
-    /*
-    vector<int> root_of;
-    vector<int> parent_of;
-    map<int, int> cluster_size;
-    vector<int> height, eulerian, first, segtree, subtree_size;
-    int timer;
-    vector<int> tin, tout;
-    int depth;
-    */
-
-    Graph (int no_of_nodes) {
+    // vector<int> root_of;
+    // vector<int> parent_of;
+    // map<int, int> cluster_size;
+    // vector<int> height;
+    // vector<int> eulerian;
+    // vector<int> first;
+    // vector<int> segtree;
+    // vector<int> subtree_size;
+    // int timer;
+    // vector<int> tin, tout;
+    // int depth;
+    Graph (int no_of_nodes, int no_of_edges, bool fill = true) {
         adj.resize (no_of_nodes);
         n = no_of_nodes;
-    }
+        visited.assign (no_of_nodes, false);
 
-    void init (bool fill = true) {
-        visited.assign (n, false);
-        /*
-        height.resize (n);
-        first.resize (n);
-        /*
-        timer = 0;
-        tin.resize (n);
-        tout.resize (n);
-        subtree_size.resize (n);
-        depth = -1;
-        */
+        // height.resize (no_of_nodes);
+        // first.resize (no_of_nodes);
+        // timer = 0;
+        // tin.resize (no_of_nodes);
+        // tout.resize (no_of_nodes);
+        // subtree_size.resize (no_of_nodes);
+        // depth = -1;
 
         if (fill) {
+            if (no_of_edges == -1) {
+                input();
+            } else {
+                input (no_of_edges);
+            }
+
             DFS ();
-            /*
-            int m = eulerian.size();
-            segtree.resize (m * 4);
-            build (1, 0, m - 1);
-            */
+            // int m = eulerian.size();
+            // segtree.resize (m * 4);
+            // build (1, 0, m - 1);
         }
     }
 
     void clear() {
-        visited.clear();
-        /*
-        height.clear();
-        first.clear();
-        eulerian.clear();
-        tin.clear();
-        tout.clear();
-        subtree_size.clear();
-        timer = 0;
-        depth = -1;
-        segtree.clear();
-        */
+        // visited.clear();
+        // height.clear();
+        // first.clear();
+        // eulerian.clear();
+        // tin.clear();
+        // tout.clear();
+        // subtree_size.clear();
+        // timer = 0;
+        // depth = -1;
+        // segtree.clear();
     }
 
     void input (int no_of_edges) {
@@ -96,36 +93,38 @@ struct Graph {
         }
 
         for (int root : roots) {
-            dfs (root, 0, -1, root);
+            dfs (root, 0, -1, root, true);
         }
     }
-    void dfs (int node, int level, int parent, int root) {
+    void dfs (int node, int level = 0, int parent = -1, int root = 0, bool modify = false) {
         visited[node] = true;
-        /*
-        root_of[node] = root;
-        parent_of[node] = parent;
-        cluster_size[root]++;
-        tin[node] = ++timer;
-        height[node] = level;
-        first[node] = eulerian.size();
-        eulerian.push_back (node);
-        depth = max (depth, level);
-        */
+
+        if (modify) {
+            // root_of[node] = root;
+            // parent_of[node] = parent;
+            // cluster_size[root]++;
+            // tin[node] = ++timer;
+            // height[node] = level;
+            // first[node] = eulerian.size();
+            // eulerian.push_back (node);
+            // depth = max (depth, level);
+        }
 
         for (int to : adj[node]) {
             if (!visited[to]) {
-                dfs (to, level + 1, node, root);
-                /*
-                eulerian.push_back (node);
-                subtree_size[node] += subtree_size[to];
-                */
+                dfs (to, level + 1, node, root, modify);
+
+                if (modify) {
+                    // eulerian.push_back (node);
+                    // subtree_size[node] += subtree_size[to];
+                }
             }
         }
 
-        /*
-        subtree_size[node]++;
-        tout[node] = ++timer;
-        */
+        if (modify) {
+            // subtree_size[node]++;
+            // tout[node] = ++timer;
+        }
     }
 
     void bfs (int root, int level = 0) {
@@ -214,22 +213,29 @@ Weighted Graph
 */
 // #define INF LLONG_MAX
 #define INF 100000000000000000
-struct graph_ev {
+struct Graph_EV {
     using pii = pair<int, int>;
     vector<vector<pii>> adj;
+    // vector<vector<int>> mat;
     int n;
     vector<bool> visited;
     vector<int> roots;
+    // vector<vector<long long int>> distances;
 
-    graph_ev (int no_of_nodes) {
+    Graph_EV (int no_of_nodes, int no_of_edges, bool fill = true) {
         adj.resize (no_of_nodes);
         n = no_of_nodes;
-    }
-
-    void init (bool fill = true) {
-        visited.assign (n, false);
+        visited.assign (no_of_nodes, false);
+        // distances = vector<vector<long long int>> (no_of_nodes, vector<long long int> (no_of_nodes, INF));
+        // mat = vector<vector<int>> (no_of_nodes, vector<int> (no_of_nodes, 0));
 
         if (fill) {
+            if (no_of_edges == -1) {
+                input();
+            } else {
+                input (no_of_edges);
+            }
+
             DFS ();
         }
     }
@@ -262,6 +268,15 @@ struct graph_ev {
             }
         }
     }
+    // void input_matrix() {
+    //     for (int i = 0; i < n; i++) {
+    //         for (int j = 0; j < 0; j++) {
+    //             int weight;
+    //             cin >> weight;
+    //             mat[i][j] = weight;
+    //         }
+    //     }
+    // }
 
     void DFS () {
         visited.assign (n, false);
@@ -271,15 +286,15 @@ struct graph_ev {
         }
 
         for (int root : roots) {
-            dfs (root);
+            dfs (root, 0, -1, root, true);
         }
     }
-    void dfs (int node) {
+    void dfs (int node, int level = 0, int parent = -1, int root = 0, bool modify = false) {
         visited[node] = true;
 
         for (auto [to, weight] : adj[node]) {
             if (!visited[to]) {
-                dfs (to);
+                dfs (to, level + 1, node, root, modify);
             }
         }
     }
@@ -309,7 +324,7 @@ struct graph_ev {
         for (int vertex = 0; vertex < n; ++vertex) {
             if (!visited[vertex]) {
                 roots.push_back (vertex);
-                dfs (vertex);
+                dfs (vertex, 0, -1, vertex, false);
             }
         }
     }
@@ -355,6 +370,33 @@ struct graph_ev {
         reverse (path.begin(), path.end());
         return path;
     }
+
+    /*
+    void populate_distances() {
+        // distances = mat;
+        for (int node = 0; node < n; node++) {
+            for (auto [to, weight] : adj[node]) {
+                if (to == node) {
+                    distances[node][to] = 0;
+                } else if (weight == -1) {
+                    distances[node][to] = INF;
+                } else {
+                    distances[node][to] = weight;
+                }
+            }
+        }
+
+        for (int k = 0; k < n; ++k) {
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (distances[i][k] < INF && distances[k][j] < INF) {
+                        distances[i][j] = min (distances[i][j], distances[i][k] + distances[k][j]);
+                    }
+                }
+            }
+        }
+    }
+    */
 };
 
 int solve() {
@@ -362,7 +404,7 @@ int solve() {
     cin.tie (NULL);
     int n, m;
     cin >> n >> m;
-    Graph g (n);
+    Graph g (n, m);
     return 0;
 }
 

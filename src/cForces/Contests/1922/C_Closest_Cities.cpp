@@ -38,12 +38,77 @@ typedef vector<vi> vvi;
 #define oyes out("YES","\n")
 #define ono out("NO", "\n")
 
+int n;
+vvi dp;
+int f (int from, int to) {
+    if (from == to) {
+        return 0;
+    }
+}
 int solve() {
     fastio;
-    int n;
     in (n);
     vi a (n);
     vin (a);
+    vi dp (n - 1);
+
+    for (int i = 0; i < n - 1; i++) {
+        if (i == 0) {
+            dp[i] = 1;
+        } else {
+            if (a[i + 1] - a[i] < a[i] - a[i - 1]) {
+                dp[i] = 1;
+            } else {
+                dp[i] = a[i + 1] - a[i];
+            }
+        }
+    }
+
+    vi dp2 (n - 1);
+
+    for (int i = n - 2; i >= 0; i--) {
+        if (i == n - 2) {
+            dp2[i] = 1;
+        } else {
+            if (a[i + 2] - a[i + 1] > a[i + 1] - a[i]) {
+                dp2[i] = 1;
+            } else {
+                dp2[i] = a[i + 1] - a[i];
+            }
+        }
+    }
+
+    vi ps;
+    ps.pb (0);
+
+    for (auto e : dp) {
+        ps.pb (ps.back() + e);
+    }
+
+    vi ps2 (n, 0);
+
+    for (int i = n - 2; i >= 0; i--) {
+        ps2[i] = (ps2[i + 1] + dp2[i]);
+    }
+
+    int m;
+    in (m);
+
+    while (m--) {
+        int f, t;
+        in2 (f, t);
+        f--;
+        t--;
+
+        if (t > f) {
+            o (ps[t] - ps[f]);
+        } else {
+            o (ps2[t] - ps2[f]);
+        }
+
+        br
+    }
+
     return 0;
 }
 

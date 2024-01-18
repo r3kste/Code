@@ -32,8 +32,8 @@ typedef vector<vi> vvi;
 #define br cout << "\n";
 #define out(_,__) cout << _ << __;
 #define o(_) out(_, " ")
-#define vout(__) for (auto _ : __) { o (_) } br
-#define vvout(___)  for (auto __ : ___) { vout (__); }
+#define vout(__) for (int _ : __) { o (_) } br
+#define vvout(___)  for (vi __ : ___) { vout (__); }
 
 #define oyes out("YES","\n")
 #define ono out("NO", "\n")
@@ -42,8 +42,43 @@ int solve() {
     fastio;
     int n;
     in (n);
-    vi a (n);
-    vin (a);
+    ll l = LLONG_MIN, r = LLONG_MAX;
+    int exc = 0;
+    vll ok;
+
+    while (n--) {
+        int type;
+        ll x;
+        in2 (type, x);
+
+        switch (type) {
+        case 1:
+            l = max (l, x);
+            break;
+
+        case 2:
+            r = min (r, x);
+            break;
+
+        case 3:
+            if (x <= r && x >= l) {
+                ok.pb (x);
+            }
+
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    for (auto x : ok) {
+        if (x <= r && x >= l) {
+            exc++;
+        }
+    }
+
+    o (max (r - l + 1 - exc, 0LL)) br
     return 0;
 }
 

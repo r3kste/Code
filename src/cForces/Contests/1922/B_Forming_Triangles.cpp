@@ -37,13 +37,43 @@ typedef vector<vi> vvi;
 
 #define oyes out("YES","\n")
 #define ono out("NO", "\n")
-
+ll nc3 (ll n) {
+    return ((unsigned long long int) (n * (n - 1) * (n - 2))) / 6;
+}
+ll nc2 (ll n) {
+    return ((unsigned long long int) (n * (n - 1))) / 2;
+}
 int solve() {
     fastio;
-    int n;
+    ll n;
     in (n);
     vi a (n);
     vin (a);
+    sort (all (a));
+    map<ll, ll> freq;
+
+    for (ll e : a) {
+        freq[e]++;
+    }
+
+    ll ans = 0;
+
+    for (auto e : freq) {
+        ll no = e.F;
+        ll count = e.S;
+
+        if (count < 2) {
+            continue;
+        } else if (count == 2) {
+            ll m = lower_bound (all (a), no) - begin (a);
+            ans += (m);
+        } else if (count >= 3) {
+            ll m = lower_bound (all (a), no) - begin (a);
+            ans += nc3 (count) + nc2 (count) * m;
+        }
+    }
+
+    o (ans)br
     return 0;
 }
 

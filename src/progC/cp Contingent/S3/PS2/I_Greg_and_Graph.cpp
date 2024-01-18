@@ -32,57 +32,47 @@ typedef vector<vi> vvi;
 #define br cout << "\n";
 #define out(_,__) cout << _ << __;
 #define o(_) out(_, " ")
-#define vout(__) for (int _ : __) { o (_) } br
-#define vvout(___)  for (vi __ : ___) { vout (__); }
+#define vout(__) for (auto _ : __) { o (_) } br
+#define vvout(___)  for (auto __ : ___) { vout (__); }
 
 #define oyes out("YES","\n")
 #define ono out("NO", "\n")
 
-#define INF LLONG_MAX
 /*
 Weighted Graph
 */
+#define INF LONG_MAX
+// #define INF 100000000000000000
 struct Graph_EV {
-    using pii = pair<int, ll>;
+    using pii = pair<int, int>;
     vector<vector<pii>> adj;
+    vector<vector<ll>> mat;
     int n;
     vector<bool> visited;
     vector<int> roots;
+    vector<vector<ll>> distances;
 
-    Graph_EV (int no_of_nodes) {
+    Graph_EV (int no_of_nodes, bool fill = true) {
         adj.resize (no_of_nodes);
         n = no_of_nodes;
-    }
-
-    /*
-    Initializes & (by default) Populates:
-        1. visited
-        2. depth
-    */
-    void init (bool fill = true) {
-        visited.assign (n, false);
+        visited.assign (no_of_nodes, false);
+        distances = vector<vector<ll>> (no_of_nodes, vector<ll> (no_of_nodes, INF));
+        mat = vector<vector<ll>> (no_of_nodes, vector<ll> (no_of_nodes, 0));
 
         if (fill) {
             DFS ();
         }
     }
 
-    /*
-    Depopulates:
-        1. visited
-        2. depth
-    */
     void clear() {
         visited.clear();
+        roots.clear();
+        distances.clear();
     }
 
-    /*
-    Populates: adj (with stdin)
-    */
-    void input (int m) {
-        for (int i = 0; i < m; i++) {
-            int u, v;
-            ll w;
+    void input (int no_of_edges) {
+        for (int i = 0; i < no_of_edges; i++) {
+            int u, v, w;
             cin >> u >> v >> w;
             u--;
             v--;
@@ -90,20 +80,42 @@ struct Graph_EV {
             adj[v].push_back (make_pair (u, w));
         }
     }
+    void input() {
+        for (int i = 0; i < n; i++) {
+            int u, w;
+            cin >> u >> w;
+            u--;
 
-    /*
-    Populates (via depth-first traversal):
-        1. visited (resets)
-        2. depth
-    */
+            if (u == -2) {
+                roots.push_back (i);
+            } else {
+                adj[u].push_back (make_pair (i, w));
+                adj[i].push_back (make_pair (u, w));
+            }
+        }
+    }
+    void input_matrix() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                ll weight;
+                cin >> weight;
+                mat[i][j] = weight;
+            }
+        }
+    }
+
     void DFS () {
         visited.assign (n, false);
+
+        if (roots.size() == 0) {
+            roots.push_back (0);
+        }
 
         for (int root : roots) {
             dfs (root);
         }
     }
-    void dfs (int node = 0) {
+    void dfs (int node) {
         visited[node] = true;
 
         for (auto [to, weight] : adj[node]) {
@@ -131,9 +143,6 @@ struct Graph_EV {
         }
     }
 
-    /*
-    Repopulates: roots
-    */
     void find_components () {
         visited.assign (n, false);
         roots.clear();
@@ -146,74 +155,17 @@ struct Graph_EV {
         }
     }
 
-    /*
-    Populates:
-        1. distances => minimum distance starting from start to every other node.
-        2. parents => parents, for traversal
-    */
-    void dijkstra_lin (int start, vector<long long int> &distances, vector<int> &parents) {
-        distances.assign (n, INF);
-        parents.assign (n, -1);
-        vector<bool> seen (n, false);
-        distances[start] = 0;
-
-        for (int i = 0; i < n; i++) {
-            int next = -1;
-
-            for (int others = 0; others < n; others++) {
-                if (!seen[others] && (next == -1 || distances[others] < distances[next])) {
-                    next = others;
-                }
-            }
-
-            if (distances[next] == INF) {
-                break;
-            }
-
-            seen[next] = true;
-
-            for (auto [to, len] : adj[next]) {
-                if (distances[next] + len < distances[to]) {
-                    distances[to] = distances[next] + len;
-                    parents[to] = next;
-                }
-            }
-        }
-    }
-    void dijkstra_set (int start, vector<long long int> &distances, vector<int> &parents) {
+    void dijkstra (int start, vector<long long int> &distances, vector<int> &parents) {
         distances.assign (n, INF);
         parents.assign (n, -1);
         distances[start] = 0;
-        using pii = pair<ll, int>;
-        set<pii> q;
-        //dist node
-        q.insert ({0, start});
-
-        while (!q.empty()) {
-            int node = q.begin()->second;
-            q.erase (q.begin());
-
-            for (auto [to, len] : adj[node]) {
-                if (distances[node] + len < distances[to]) {
-                    q.erase ({distances[to], to});
-                    distances[to] = distances[node] + len;
-                    parents[to] = node;
-                    q.insert ({distances[to], to});
-                }
-            }
-        }
-    }
-    void dijkstra_pqu (int start, vector<long long int> &distances, vector<int> &parents) {
-        distances.assign (n, INF);
-        parents.assign (n, -1);
-        distances[start] = 0;
-        using pii = pair<ll, int>;
+        using pii = pair<int, int>;
         priority_queue<pii, vector<pii>, greater<pii>> q;
         q.push ({0, start});
 
         while (!q.empty()) {
             int node = q.top().second;
-            ll dist = q.top().first;
+            int dist = q.top().first;
             q.pop();
 
             if (dist != distances[node]) {
@@ -234,7 +186,7 @@ struct Graph_EV {
 
         for (int v = target; v != start; v = parents[v]) {
             if (v == -1) {
-                return vi (1, -1);
+                return vector<int> (1, -1);
             }
 
             path.push_back (v + offset);
@@ -244,18 +196,50 @@ struct Graph_EV {
         reverse (path.begin(), path.end());
         return path;
     }
+
+    void populate_distances (vector<int> & nodes_to_be_removed) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                distances[i][j] = mat[i][j];
+            }
+        }
+
+        reverse (all (nodes_to_be_removed));
+        vb done (n);
+        vll ans;
+
+        for (auto kk : nodes_to_be_removed) {
+            int k = kk - 1;
+            ll sum = 0;
+            done[k] = 1;
+
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    distances[i][j] = min (distances[i][j], distances[i][k] + distances[k][j]);
+
+                    if (done[i] && done[j]) {
+                        sum += distances[i][j];
+                    }
+                }
+            }
+
+            ans.pb (sum);
+        }
+
+        reverse (all (ans));
+        vout (ans);
+    }
 };
 
 int solve() {
     fastio;
-    int n, m;
-    in2 (n, m);
-    Graph_EV g (n);
-    g.input (m);
-    vll distances;
-    vi parents;
-    g.dijkstra_pqu (0, distances, parents);
-    vout (g.path (0, n - 1, parents, 1));
+    int n;
+    in (n);
+    Graph_EV g (n, false);
+    g.input_matrix();
+    vi nodes_to_be_removed (n);
+    vin (nodes_to_be_removed);
+    g.populate_distances (nodes_to_be_removed);
     return 0;
 }
 

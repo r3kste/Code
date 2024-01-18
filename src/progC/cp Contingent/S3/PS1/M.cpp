@@ -78,10 +78,10 @@ void dfs (int node, int parent, int match) {
     }
 }
 
-void populate_subtree_size (int node, int parent) {
+void subtrees (int node, int parent) {
     for (auto surr : adj[node]) {
         if (surr != parent) {
-            populate_subtree_size (surr, node);
+            subtrees (surr, node);
             subtree_size[node] += subtree_size[surr];
         }
     }
@@ -107,7 +107,7 @@ int solve() {
         adj[i].push_back (u);
     }
 
-    populate_subtree_size (0, -1);
+    subtrees (0, -1);
     dfs (0, -1, 0);
     o (ans) br;
     return 0;
